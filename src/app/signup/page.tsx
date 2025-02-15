@@ -1,47 +1,33 @@
-import styles from "./page.module.scss";
+import styles from "../page.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/services/api";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
-export default function Home() {
-  async function handlerLogin(formdata: FormData) {
+export default function SignUp() {
+  async function handlerRegister(formdata: FormData) {
     "use server";
+    const name = formdata.get("name");
     const email = formdata.get("email");
     const password = formdata.get("password");
-    if (!email || !password) {
+
+    if (!name || !email || !password) {
       return;
     }
 
     try {
-      const response = await api.post("/session", {
+      await api.post("/users", {
+        name,
         email,
         password,
-      });
-
-      if (!response.data.token) {
-        throw new Error("Token not found!");
-      }
-
-      // Definir tempo de expiração do token em segundos
-      const expressTime = 60 * 60 * 24 * 7; // 7 dias
-      const cookieStore = await cookies();
-      // Salvar o token na cookie
-      cookieStore.set("session", response.data.token, {
-        maxAge: expressTime,
-        path: "/",
-        httpOnly: false,
-        secure: process.env.NODE_ENV === "production", // Para ambientes de produção, usar HTTPS
-        sameSite: "strict",
       });
     } catch (error) {
       console.log(error);
       return;
     }
-
-    redirect("/dashboard");
+    redirect("/");
   }
+
   return (
     <>
       <div className={styles.containerCenter}>
@@ -56,7 +42,15 @@ export default function Home() {
         />
 
         <section className={styles.login}>
-          <form action={handlerLogin}>
+          <h1>Criando sua conta</h1>
+          <form action={handlerRegister}>
+            <input
+              type="text"
+              placeholder="Digite seu seu nome!"
+              required
+              name="name"
+              className={styles.input}
+            />
             <input
               type="email"
               placeholder="Digite seu e-mail!"
@@ -74,12 +68,12 @@ export default function Home() {
             />
 
             <button className={styles.button} type="submit">
-              Logar
+              Cadastrar
             </button>
           </form>
 
-          <Link href="/signup" className={styles.register}>
-            Não possui uma conta? Cadastre-se
+          <Link href="/" className={styles.register}>
+            Já possui uma conta? Faça login
           </Link>
         </section>
       </div>
