@@ -33,7 +33,7 @@
     height: 40px;
     font-size: 16px;
     background-color: var(--red-900);
-    color: var(--white);
+    color: #000;
     border-radius: 8px;
     border: 0;
     font-weight: bold;
@@ -47,11 +47,6 @@
   form button:hover {
     transform: scale(1.05);
   }
-}
-a:hover {
-  transition: all 0.5s;
-  color: var(--gray-100);
-  transform: scale(1.05);
 }
 
 .input {
@@ -69,7 +64,7 @@ a:hover {
 }
 
 .register {
-  color: var(--white);
+  color: #FFF;
   text-decoration: none;
 }
 
